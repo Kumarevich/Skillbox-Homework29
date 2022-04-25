@@ -2,28 +2,18 @@
 
 class Animal
 {
-protected:
-    std::string type = "animal";
 public:
-    std::string getType()
-    {
-        return type;
-    }
-
     virtual void voice(Animal* a) = 0;
 };
 
 class Dog : virtual public Animal
 {
 public:
-    Dog(std::string _type)
-    {
-        type =  _type;
-    }
+    Dog(){};
 
     virtual void voice(Animal* a)
     {
-        if (a->getType() == "dog") std::cout << "Woof ";
+        if (typeid(*a) == typeid(*this)) std::cout << "Woof ";
         else std::cout << "Bark ";
     }
 };
@@ -31,21 +21,27 @@ public:
 class Cat : virtual public Animal
 {
 public:
-    Cat(std::string _type)
-    {
-        type = _type;
-    }
+    Cat(){};
 
     virtual void voice(Animal* a)
     {
-        if (a->getType() == "dog") std::cout << "Meow ";
-        else std::cout << "Purr ";
+        if (typeid(*a) == typeid(*this)) std::cout << "Purr ";
+        else std::cout << "Meow ";
     }
 };
 
+void getType(Animal* a)
+{
+    if (typeid(*a) == typeid(Dog)) std::cout << "dog";
+    else if (typeid(*a) == typeid(Cat)) std::cout << "cat";
+}
+
 void meeting(Animal* a, Animal* b)
 {
-    std::cout << a->getType() << " + " << b->getType() << " -> ";
+    getType(a);
+    std::cout << " + ";
+    getType(b);
+    std::cout << " -> ";
     a->voice(b);
     b->voice(a);
     std::cout << std::endl;
@@ -53,10 +49,10 @@ void meeting(Animal* a, Animal* b)
 
 int main() {
     Animal* animals[4];
-    animals[0] = new Cat("cat");
-    animals[1] = new Cat("cat");
-    animals[2] = new Dog("dog");
-    animals[3] = new Dog("dog");
+    animals[0] = new Cat();
+    animals[1] = new Cat();
+    animals[2] = new Dog();
+    animals[3] = new Dog();
     meeting(animals[0], animals[1]);
     meeting(animals[2], animals[3]);
     meeting(animals[0], animals[2]);
